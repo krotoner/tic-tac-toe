@@ -11,7 +11,6 @@ cd backend && node app
 npm start
 ```
 
-
 ## Установка бэкенда
 ```
 сd ttt/backend/
