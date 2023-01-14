@@ -11,7 +11,7 @@ const Square = ({ value,onClick })=> {
       {value}
     </button>
   );
-}
+}// клетка поля
 
 const StartGame = ({ onClick, choosedFig, room }) => {
   return (
@@ -38,9 +38,9 @@ const StartGame = ({ onClick, choosedFig, room }) => {
       <div id="output"> {window.location.href + "?" + room}</div>
     </div>
   );
-};
+}; // Окно начала игры. Выбор роли 1 игрока и присвоение оставшийся другому
 
-const Popup = ({
+const EndGameWindow = ({
   onClick,
   choosedFig,
   room,
@@ -54,7 +54,7 @@ const Popup = ({
       {!gameOver ? (
         <StartGame onClick={onClick} choosedFig={choosedFig} room={room} />
       ) : (
-        <WinWindow
+        <PopupResultsWindow
           winner={winner}
           oneMoreHandler={oneMoreHandler}
           draw={draw}
@@ -62,9 +62,9 @@ const Popup = ({
       )}
     </div>
   );
-};
+}; // окно конца игры
 
-const WinWindow = ({ winner, oneMoreHandler, draw }) => {
+const PopupResultsWindow = ({ winner, oneMoreHandler, draw }) => {
   return (
     <div className="popup">
       {winner ? (
@@ -87,7 +87,7 @@ const WinWindow = ({ winner, oneMoreHandler, draw }) => {
       />
     </div>
   );
-};
+};  // окно отображения результатов игры
 
 class Game extends Component {
   renderSquare(i) {
@@ -112,7 +112,7 @@ class Game extends Component {
     return (
       <div className="Game">
         {(isFirstUser && !secondUserInGame) || gameOver ? (
-          <Popup
+          <EndGameWindow
             {...props}
             onClick={el => figChoose(el.target.id)}
           />

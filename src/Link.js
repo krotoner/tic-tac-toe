@@ -4,8 +4,6 @@ import Chat from './Chat';
 import Game from './Game';
 import calculateWinner from './functions/calculateWinner.js'
 
-
-
 class Link extends Component {
   constructor(props) {
     super(props);
@@ -22,30 +20,28 @@ class Link extends Component {
       secondUserFig: "O",
       room: "",
       winnerArr: []
-    };
+    }; // информация об игре
 
-    this.socket = io("localhost:5000");
+    this.socket = io("localhost:5000"); //местоположение сервера
+
     this.socket.on("RECEIVE_MESSAGE", data => {
       addMessage(data);
-    });
+    }); // отправка сообщения
     this.socket.on("RECIVE_GAME_MAP", data => {
       addGameMap(data);
-    });
+    }); // создание карты
     this.socket.on("RECIVE_USERS_SEQUENCE", data => {
       addUserSeq(data);
-    });
+    }); // подключение первого игрока
     this.socket.on("message", data => {
       secondUserAdd(data.condition);
-    });
+    }); // подключение второго игрока
     this.socket.on("RECIVE_USERS_FIG", data => {
       chooseFig(data);
-    });
+    }); // присвоение ролей
     this.socket.on("ADD_ROOM", data => {
       addRoom(data);
-    });
-    this.socket.on("message", data => {
-      console.log(data);
-    });
+    }); // присоединение к комнате
 
     if (this.path === "") {
       this.socket.emit("CONNECT_NEW_USER");

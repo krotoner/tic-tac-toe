@@ -4,7 +4,6 @@ let socket = require("socket.io");
 let app = express();
 
 let rooms = [];
-let roomID;
 server = app.listen(5000, function() {
   console.log("server is running on port 5000"); // инициализация сервера
 });
@@ -13,8 +12,8 @@ io = socket(server);
 
 io.on("connection", socket => {
   socket.on("CONNECT_NEW_USER", () => {
-    var room = Math.round(Math.random() * 1000000); // подключенный первый пользователь
-    socket.join(room); // добавить его в новую комнату
+    var room = Math.round(Math.random() * 1000000); // создание комнаты для первого пользователя
+    socket.join(room); // добавление его в новую комнату
     io.emit("ADD_ROOM", { room: room });
     addRoom(room);
 
@@ -31,21 +30,21 @@ io.on("connection", socket => {
       io.to(room).emit("RECIVE_USERS_SEQUENCE", data); // первая пользовательская последовательность
     });
     socket.on("SEND_USERS_FIG", data => {
-      io.to(room).emit("RECIVE_USERS_FIG", data); // первая пользовательская фигура
+      io.to(room).emit("RECIVE_USERS_FIG", data); // первый пользователь отправляет фигуру
     });
   });
 
-  socket.on("CONNECT_SECOND_USER", data => {  // подключенный второй пользователь
+  socket.on("CONNECT_SECOND_USER", data => {  // подключение второго пользователя
     let roomId = data.roomId;
 
-    if (!containsTheRoom(roomId)) { // проверка номера
+    if (!containsTheRoom(roomId)) { // проверка номера комнаты
       io.emit("message", { message: "Room not found" });
     } else {
       console.log("second user add" + " " + roomId);
 
       io.in(data.roomId).clients((err, clients) => {
         if (clients.length < 2) {
-          socket.join(roomId);
+          socket.join(roomId); // добавление его в новую комнату
           io.to(roomId).emit("message", {
             message: "Second Player join Game",
             condition: true
@@ -67,7 +66,7 @@ io.on("connection", socket => {
       });
 
       socket.on("SEND_USERS_FIG", data => {
-        io.to(roomId).emit("RECIVE_USERS_FIG", data);  // второй пользователь отправляет цифру
+        io.to(roomId).emit("RECIVE_USERS_FIG", data);  // второй пользователь отправляет фигуру
       });
     }
   });
